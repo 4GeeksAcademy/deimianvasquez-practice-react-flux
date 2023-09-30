@@ -12,7 +12,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 					background: "white",
 					initial: "white"
 				}
-			]
+			],
+			currentUser: "Deimian",
+			character: [],
+			urlBase: "https://playground.4geeks.com/apis/fake/todos/user/deimian",
+			allTask: []
+
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -37,6 +42,40 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				//reset the global store
 				setStore({ demo: demo });
+			},
+			getCharacter: async () => {
+				try {
+					let response = await fetch("https://rickandmortyapi.com/api/character")
+					let data = await response.json()
+
+					setStore({
+						character: data.results
+					})
+
+				} catch (error) {
+					console.log(error)
+				}
+			},
+			//Esta funcio se trae las tareas
+			getTask: async () => {
+				let store = getStore()
+
+				try {
+					let response = await fetch(store.urlBase)
+					let data = await response.json()
+
+					if (response.ok) {
+						setStore({
+							allTask: data
+						})
+					}
+					if (response.status == 404) {
+						console.log("Creamos un usuario")
+					}
+
+				} catch (error) {
+					console.log(error)
+				}
 			}
 		}
 	};
